@@ -45,12 +45,10 @@ def send_notification(title, message, priority, tags):
 
 def main():
     page_id = "a55a2edd304649d18cc86e13af7f4fdc"
-    print("Getting database")
     db = get_database(page_id)
     today = datetime.today()
     last_month = today - timedelta(days=30)
     date = last_month.strftime("%Y-%m-%d")
-    print(date)
     pages = query_database_by_date(db["id"], "Submitted on", date)
     if len(pages['results']) <= 35:
         diff = 35-len(pages['results'])
@@ -58,7 +56,7 @@ def main():
             send_notification("Apply to jobs.", "Let's shoot for 3 job applications today!", "high", "inbox_tray")
         elif diff > 10:
             send_notification("Apply to jobs.", "Let's shoot for 5 job applications today!", "high", "inbox_tray")
-        else:
+        elif diff != 0:
             send_notification("Apply to jobs", "Let's shoot for " + str(diff) + " job applications today! ", "high", "inbox_tray")
 
 
