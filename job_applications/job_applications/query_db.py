@@ -9,8 +9,7 @@ load_dotenv()
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN", "")
 
-while NOTION_TOKEN == "":
-    print("NOTION_TOKEN not found.")
+if NOTION_TOKEN == "":
     exit()
 
 # Initialize the client
