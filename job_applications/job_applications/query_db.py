@@ -10,6 +10,7 @@ load_dotenv()
 NOTION_TOKEN = os.getenv("NOTION_TOKEN", "")
 
 if NOTION_TOKEN == "":
+    send_notification("Error", "Your job script is not working.", "high", "no_entry")
     exit()
 
 # Initialize the client
@@ -48,15 +49,18 @@ def main():
     today = datetime.today()
     last_month = today - timedelta(days=30)
     date = last_month.strftime("%Y-%m-%d")
-    pages = query_database_by_date(db["id"], "Submitted on", date)
-    if len(pages['results']) <= 35:
-        diff = 35-len(pages['results'])
-        if diff > 5 and diff < 10:
-            send_notification("Apply to jobs.", "Let's shoot for 3 job applications today!", "high", "inbox_tray")
-        elif diff > 10:
-            send_notification("Apply to jobs.", "Let's shoot for 5 job applications today!", "high", "inbox_tray")
-        elif diff != 0:
-            send_notification("Apply to jobs", "Let's shoot for " + str(diff) + " job applications today! ", "high", "inbox_tray")
+    try:
+        pages = query_database_by_date(db["id"], "Submitted", date)
+        if len(pages['results']) <= 35:
+            diff = 35-len(pages['results'])
+            if diff > 5 and diff < 10:
+                send_notification("Apply to jobs.", "Let's shoot for 3 job applications today!", "high", "inbox_tray")
+            elif diff > 10:
+                send_notification("Apply to jobs.", "Let's shoot for 5 job applications today!", "high", "inbox_tray")
+            elif diff != 0:
+                send_notification("Apply to jobs", "Let's shoot for " + str(diff) + " job applications today! ", "high", "inbox_tray")
+    except:
+        send_notification("Error", "Your job script is not working.", "high", "no_entry")
 
 
 if __name__ == "__main__":
